@@ -2,3 +2,4 @@
 # About the project
 
 *Write a short description about the course and add a link to your GitHub repository here. This is an R Markdown (.Rmd) file so you can use R Markdown syntax.*
+"Hi, this is the first time for me to write something in R studio. I feel excited and get a shock for this powerful languages. excepting to learn basic rules, fuctions and packges in R, I expect to learn more about how to combine R with statistic methods."

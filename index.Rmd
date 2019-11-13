@@ -1,5 +1,6 @@
 ---
 title: "IODS course project"
+author: "xi-shu"
 output:
   html_document:
     theme: cosmo
@@ -21,4 +22,5 @@ output:
 ```
 
 ***
-
+```{r child = "chapter3.Rmd"}
+```

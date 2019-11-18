@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: "IODS course project"
 author: "xi-shu"
@@ -24,3 +25,31 @@ output:
 ***
 ```{r child = "chapter3.Rmd"}
 ```
+=======
+---
+title: "IODS course project"
+author: "xi-shu"
+output:
+  html_document:
+    theme: cosmo
+    toc: true
+    toc_depth: 2
+    fig_caption: true
+    fig_width: 6
+    fig_height: 4
+---
+
+***
+  
+```{r child = "chapter1.Rmd"}
+```
+  
+***
+  
+```{r child = "chapter2.Rmd"}
+```
+
+***
+```{r child = "chapter3.Rmd"}
+```
+>>>>>>> 815a3a5e2b7fb9d8340ad07b4fc667fa4c4d3f30

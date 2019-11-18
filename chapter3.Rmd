@@ -1,0 +1,113 @@
+# Insert chapter 3 logistic regression
+
+*Describe the work you have done this week and summarize your learning.*
+
+- Describe your work and results clearly. 
+
+#3.1 Data wrangling 
+```{r}
+library(dplyr)
+library(ggplot2)
+
+#loading the data & exploring the structure
+url <- "http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets"
+url_mat <- paste(url, "student-mat.csv", sep = "/")
+url_mat
+mat <- read.table(url_mat, sep = ";" , header=TRUE)
+url_por <- paste(url, "student-por.csv", sep ="/")
+url_por
+por <- read.table(url_por, sep = ";", header = TRUE)
+colnames(mat)
+colnames(por)
+
+dim(mat)
+str(mat)
+dim(por)
+str(por)
+
+join_by <- c("school", "sex", "age", "address", "famsize", "Pstatus", "Medu", "Fedu", "Mjob", "Fjob", "reason", "nursery","internet")
+math_por <- inner_join(mat, por, by = join_by, suffix = c(".mat", ".por"))
+joined_columns <- select(math_por, one_of(join_by))
+notjoined_columns <- colnames(mat)[!colnames(mat) %in% join_by]
+
+alc <- select(math_por, one_of(join_by))
+notjoined_columns <- colnames(mat)[!colnames(mat) %in% join_by]
+notjoined_columns
+
+for(column_name in notjoined_columns) {
+  # select two columns from 'math_por' with the same original name
+  two_columns <- select(math_por, starts_with(column_name))
+  # select the first column vector of those two columns
+  first_column <- select(two_columns, 1)[[1]]
+  # if that first column vector is numeric...
+  if(is.numeric(first_column)) {
+    # take a rounded average of each row of the two columns and
+    # add the resulting vector to the alc data frame
+    alc[column_name] <- round(rowMeans(two_columns))
+  } else { # else if it's not numeric...
+    # add the first column vector to the alc data frame
+    alc[column_name] <- first_column
+  }
+}
+
+# glimpse at the new combined data
+glimpse(alc)
+
+#new variables
+alc <- alc %>% 
+  mutate(alc_use = (Dalc + Walc)/2) %>% 
+  mutate(high_use = alc_use > 2)
+
+#saving the tidied dataset
+
+write.table(alc,file="alc.cvs",sep = ",")
+```
+
+
+#3.2data analysis 
+
+# Read the data file
+```{r}
+library(tidyr); library(dplyr); library(ggplot2)
+
+#  study the relationships between high alcohol consumption, studytime health，and freetime
+
+#Numerically and graphically explore the distributions of high alcohol consumption, studytime health，and freetime，and their relationships with alcohol consumption
+
+```
+
+```{r}
+#Use logistic regression to statistically explore the relationship between choosen variables.
+my_model<- glm(formula =high_use ~ health+studytime+freetime,
+               family = binomial(link="logit"),
+                data = alc)
+summary(my_model)
+coef(my_model)
+```
+
+
+
+```{r}
+# explore the predictive power of you model.
+probabilities <- predict(my_model, type = "response")
+# add the predicted probabilities to 'alc'
+alc <- mutate(alc, probability = probabilities)
+# use the probabilities to make a prediction of high_use
+alc <- mutate(alc, prediction = probability > 0.5)
+
+# initialize a plot of 'high_use' versus 'probability' in 'alc'
+g <- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+
+# define the geom as points and draw the plot
+g + geom_point()
+
+# tabulate the target variable versus the predictions
+table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table %>% addmargins
+
+
+```
+
+- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
+
+
+- Assume the reader has no previous knowledge of your data or the more advanced methods you are using.

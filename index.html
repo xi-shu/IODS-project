@@ -476,6 +476,518 @@ table(high_use = alc$high_use, prediction = alc$prediction) %&gt;% prop.table %&
 ##    FALSE 0.67801047 0.02356021 0.70157068
 ##    TRUE  0.27486911 0.02356021 0.29842932
 ##    Sum   0.95287958 0.04712042 1.00000000</code></pre>
+<pre class="r"><code>#7. cross-validation 
+# define a loss function (average prediction error)
+loss_func &lt;- function(class, prob) {
+  n_wrong &lt;- abs(class - prob) &gt; 0.5
+  mean(n_wrong)
+}
+
+# compute the average number of wrong predictions in the (training) data
+loss_func(class = alc$high_use, prob = alc$probability)</code></pre>
+<pre><code>## [1] 0.2984293</code></pre>
+<pre class="r"><code>library(boot)
+cv &lt;- cv.glm(data = alc, cost = loss_func, glmfit = my_model, K = 10)</code></pre>
+<pre class="r"><code>#8.cross-validation to compare the performance of different logistic regression models
+my_model_1&lt;-glm(formula =high_use ~ health+studytime+freetime+failures+sex+absences+G1+G2+G3+alc_use+romantic,
+                family = binomial(link=&quot;logit&quot;),
+                data = alc)</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre class="r"><code>my_model_2 &lt;- step(my_model_1,direction = &quot;both&quot;)</code></pre>
+<pre><code>## Start:  AIC=24
+## high_use ~ health + studytime + freetime + failures + sex + absences + 
+##     G1 + G2 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - failures   1     0.00  22.00
+## - sex        1     0.00  22.00
+## - absences   1     0.00  22.00
+## - G1         1     0.00  22.00
+## - freetime   1     0.00  22.00
+## - G2         1     0.00  22.00
+## - health     1     0.00  22.00
+## - G3         1     0.00  22.00
+## - studytime  1     0.00  22.00
+## - romantic   1     0.00  22.00
+## &lt;none&gt;             0.00  24.00
+## - alc_use    1   411.61 433.61</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=22
+## high_use ~ health + studytime + freetime + sex + absences + G1 + 
+##     G2 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - sex        1     0.00  20.00
+## - absences   1     0.00  20.00
+## - G1         1     0.00  20.00
+## - G2         1     0.00  20.00
+## - freetime   1     0.00  20.00
+## - G3         1     0.00  20.00
+## - health     1     0.00  20.00
+## - studytime  1     0.00  20.00
+## - romantic   1     0.00  20.00
+## &lt;none&gt;             0.00  22.00
+## + failures   1     0.00  24.00
+## - alc_use    1   413.03 433.03</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=20
+## high_use ~ health + studytime + freetime + absences + G1 + G2 + 
+##     G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - absences   1     0.00  18.00
+## - G1         1     0.00  18.00
+## - G2         1     0.00  18.00
+## - freetime   1     0.00  18.00
+## - G3         1     0.00  18.00
+## - studytime  1     0.00  18.00
+## - health     1     0.00  18.00
+## - romantic   1     0.00  18.00
+## &lt;none&gt;             0.00  20.00
+## + sex        1     0.00  22.00
+## + failures   1     0.00  22.00
+## - alc_use    1   420.93 438.93</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=18
+## high_use ~ health + studytime + freetime + G1 + G2 + G3 + alc_use + 
+##     romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance   AIC
+## - G2         1      0.0  16.0
+## - G3         1      0.0  16.0
+## - G1         1      0.0  16.0
+## - freetime   1      0.0  16.0
+## - health     1      0.0  16.0
+## - studytime  1      0.0  16.0
+## - romantic   1      0.0  16.0
+## &lt;none&gt;              0.0  18.0
+## + absences   1      0.0  20.0
+## + failures   1      0.0  20.0
+## + sex        1      0.0  20.0
+## - alc_use    1    436.7 452.7</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=16
+## high_use ~ health + studytime + freetime + G1 + G3 + alc_use + 
+##     romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - freetime   1     0.00  14.00
+## - health     1     0.00  14.00
+## - G1         1     0.00  14.00
+## - studytime  1     0.00  14.00
+## - G3         1     0.00  14.00
+## - romantic   1     0.00  14.00
+## &lt;none&gt;             0.00  16.00
+## + G2         1     0.00  18.00
+## + absences   1     0.00  18.00
+## + failures   1     0.00  18.00
+## + sex        1     0.00  18.00
+## - alc_use    1   436.74 450.74</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=14
+## high_use ~ health + studytime + G1 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance   AIC
+## - health     1      0.0  12.0
+## - G1         1      0.0  12.0
+## - studytime  1      0.0  12.0
+## - G3         1      0.0  12.0
+## - romantic   1      0.0  12.0
+## &lt;none&gt;              0.0  14.0
+## + freetime   1      0.0  16.0
+## + G2         1      0.0  16.0
+## + failures   1      0.0  16.0
+## + absences   1      0.0  16.0
+## + sex        1      0.0  16.0
+## - alc_use    1    442.8 454.8</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=12
+## high_use ~ studytime + G1 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - G1         1     0.00  10.00
+## - studytime  1     0.00  10.00
+## - G3         1     0.00  10.00
+## - romantic   1     0.00  10.00
+## &lt;none&gt;             0.00  12.00
+## + health     1     0.00  14.00
+## + freetime   1     0.00  14.00
+## + G2         1     0.00  14.00
+## + failures   1     0.00  14.00
+## + absences   1     0.00  14.00
+## + sex        1     0.00  14.00
+## - alc_use    1   443.29 453.29</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=10
+## high_use ~ studytime + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - G3         1     0.00   8.00
+## - studytime  1     0.00   8.00
+## - romantic   1     0.00   8.00
+## &lt;none&gt;             0.00  10.00
+## + G1         1     0.00  12.00
+## + health     1     0.00  12.00
+## + G2         1     0.00  12.00
+## + freetime   1     0.00  12.00
+## + failures   1     0.00  12.00
+## + absences   1     0.00  12.00
+## + sex        1     0.00  12.00
+## - alc_use    1   444.41 452.41</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=8
+## high_use ~ studytime + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - studytime  1     0.00   6.00
+## - romantic   1     0.00   6.00
+## &lt;none&gt;             0.00   8.00
+## + freetime   1     0.00  10.00
+## + health     1     0.00  10.00
+## + G2         1     0.00  10.00
+## + G3         1     0.00  10.00
+## + G1         1     0.00  10.00
+## + sex        1     0.00  10.00
+## + absences   1     0.00  10.00
+## + failures   1     0.00  10.00
+## - alc_use    1   448.02 454.02</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=6
+## high_use ~ alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - romantic   1     0.00   4.00
+## &lt;none&gt;             0.00   6.00
+## + freetime   1     0.00   8.00
+## + studytime  1     0.00   8.00
+## + health     1     0.00   8.00
+## + G2         1     0.00   8.00
+## + G3         1     0.00   8.00
+## + G1         1     0.00   8.00
+## + absences   1     0.00   8.00
+## + failures   1     0.00   8.00
+## + sex        1     0.00   8.00
+## - alc_use    1   465.11 469.11</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=4
+## high_use ~ alc_use</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## &lt;none&gt;             0.00   4.00
+## + romantic   1     0.00   6.00
+## + studytime  1     0.00   6.00
+## + freetime   1     0.00   6.00
+## + health     1     0.00   6.00
+## + G2         1     0.00   6.00
+## + G3         1     0.00   6.00
+## + G1         1     0.00   6.00
+## + absences   1     0.00   6.00
+## + failures   1     0.00   6.00
+## + sex        1     0.00   6.00
+## - alc_use    1   465.68 467.68</code></pre>
+<pre class="r"><code>summary(my_model_2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = high_use ~ alc_use, family = binomial(link = &quot;logit&quot;), 
+##     data = alc)
+## 
+## Deviance Residuals: 
+##        Min          1Q      Median          3Q         Max  
+## -1.342e-05  -2.110e-08  -2.110e-08   2.110e-08   1.402e-05  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)  -207.82   55600.36  -0.004    0.997
+## alc_use        92.35   24842.79   0.004    0.997
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 4.6568e+02  on 381  degrees of freedom
+## Residual deviance: 1.9279e-08  on 380  degrees of freedom
+## AIC: 4
+## 
+## Number of Fisher Scoring iterations: 25</code></pre>
+<pre class="r"><code>#prediction 
+predicted &lt;- predict(my_model_1, alc, type=&quot;response&quot;)
+head(predicted,2)</code></pre>
+<pre><code>##            1            2 
+## 2.220446e-16 2.220446e-16</code></pre>
+<pre class="r"><code>#output model
+library(ggplot2)
+g &lt;- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g + geom_point()</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
 <ul>
 <li><p>Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.</p></li>
 <li><h1 id="assume-the-reader-has-no-previous-knowledge-of-your-data-or-the-more-advanced-methods-you-are-using.">Assume the reader has no previous knowledge of your data or the more advanced methods you are using.</h1></li>
@@ -746,6 +1258,518 @@ table(high_use = alc$high_use, prediction = alc$prediction) %&gt;% prop.table %&
 ##    FALSE 0.67801047 0.02356021 0.70157068
 ##    TRUE  0.27486911 0.02356021 0.29842932
 ##    Sum   0.95287958 0.04712042 1.00000000</code></pre>
+<pre class="r"><code>#7. cross-validation 
+# define a loss function (average prediction error)
+loss_func &lt;- function(class, prob) {
+  n_wrong &lt;- abs(class - prob) &gt; 0.5
+  mean(n_wrong)
+}
+
+# compute the average number of wrong predictions in the (training) data
+loss_func(class = alc$high_use, prob = alc$probability)</code></pre>
+<pre><code>## [1] 0.2984293</code></pre>
+<pre class="r"><code>library(boot)
+cv &lt;- cv.glm(data = alc, cost = loss_func, glmfit = my_model, K = 10)</code></pre>
+<pre class="r"><code>#8.cross-validation to compare the performance of different logistic regression models
+my_model_1&lt;-glm(formula =high_use ~ health+studytime+freetime+failures+sex+absences+G1+G2+G3+alc_use+romantic,
+                family = binomial(link=&quot;logit&quot;),
+                data = alc)</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre class="r"><code>my_model_2 &lt;- step(my_model_1,direction = &quot;both&quot;)</code></pre>
+<pre><code>## Start:  AIC=24
+## high_use ~ health + studytime + freetime + failures + sex + absences + 
+##     G1 + G2 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - failures   1     0.00  22.00
+## - sex        1     0.00  22.00
+## - absences   1     0.00  22.00
+## - G1         1     0.00  22.00
+## - freetime   1     0.00  22.00
+## - G2         1     0.00  22.00
+## - health     1     0.00  22.00
+## - G3         1     0.00  22.00
+## - studytime  1     0.00  22.00
+## - romantic   1     0.00  22.00
+## &lt;none&gt;             0.00  24.00
+## - alc_use    1   411.61 433.61</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=22
+## high_use ~ health + studytime + freetime + sex + absences + G1 + 
+##     G2 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - sex        1     0.00  20.00
+## - absences   1     0.00  20.00
+## - G1         1     0.00  20.00
+## - G2         1     0.00  20.00
+## - freetime   1     0.00  20.00
+## - G3         1     0.00  20.00
+## - health     1     0.00  20.00
+## - studytime  1     0.00  20.00
+## - romantic   1     0.00  20.00
+## &lt;none&gt;             0.00  22.00
+## + failures   1     0.00  24.00
+## - alc_use    1   413.03 433.03</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=20
+## high_use ~ health + studytime + freetime + absences + G1 + G2 + 
+##     G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - absences   1     0.00  18.00
+## - G1         1     0.00  18.00
+## - G2         1     0.00  18.00
+## - freetime   1     0.00  18.00
+## - G3         1     0.00  18.00
+## - studytime  1     0.00  18.00
+## - health     1     0.00  18.00
+## - romantic   1     0.00  18.00
+## &lt;none&gt;             0.00  20.00
+## + sex        1     0.00  22.00
+## + failures   1     0.00  22.00
+## - alc_use    1   420.93 438.93</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=18
+## high_use ~ health + studytime + freetime + G1 + G2 + G3 + alc_use + 
+##     romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance   AIC
+## - G2         1      0.0  16.0
+## - G3         1      0.0  16.0
+## - G1         1      0.0  16.0
+## - freetime   1      0.0  16.0
+## - health     1      0.0  16.0
+## - studytime  1      0.0  16.0
+## - romantic   1      0.0  16.0
+## &lt;none&gt;              0.0  18.0
+## + absences   1      0.0  20.0
+## + failures   1      0.0  20.0
+## + sex        1      0.0  20.0
+## - alc_use    1    436.7 452.7</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=16
+## high_use ~ health + studytime + freetime + G1 + G3 + alc_use + 
+##     romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - freetime   1     0.00  14.00
+## - health     1     0.00  14.00
+## - G1         1     0.00  14.00
+## - studytime  1     0.00  14.00
+## - G3         1     0.00  14.00
+## - romantic   1     0.00  14.00
+## &lt;none&gt;             0.00  16.00
+## + G2         1     0.00  18.00
+## + absences   1     0.00  18.00
+## + failures   1     0.00  18.00
+## + sex        1     0.00  18.00
+## - alc_use    1   436.74 450.74</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=14
+## high_use ~ health + studytime + G1 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance   AIC
+## - health     1      0.0  12.0
+## - G1         1      0.0  12.0
+## - studytime  1      0.0  12.0
+## - G3         1      0.0  12.0
+## - romantic   1      0.0  12.0
+## &lt;none&gt;              0.0  14.0
+## + freetime   1      0.0  16.0
+## + G2         1      0.0  16.0
+## + failures   1      0.0  16.0
+## + absences   1      0.0  16.0
+## + sex        1      0.0  16.0
+## - alc_use    1    442.8 454.8</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=12
+## high_use ~ studytime + G1 + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - G1         1     0.00  10.00
+## - studytime  1     0.00  10.00
+## - G3         1     0.00  10.00
+## - romantic   1     0.00  10.00
+## &lt;none&gt;             0.00  12.00
+## + health     1     0.00  14.00
+## + freetime   1     0.00  14.00
+## + G2         1     0.00  14.00
+## + failures   1     0.00  14.00
+## + absences   1     0.00  14.00
+## + sex        1     0.00  14.00
+## - alc_use    1   443.29 453.29</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=10
+## high_use ~ studytime + G3 + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - G3         1     0.00   8.00
+## - studytime  1     0.00   8.00
+## - romantic   1     0.00   8.00
+## &lt;none&gt;             0.00  10.00
+## + G1         1     0.00  12.00
+## + health     1     0.00  12.00
+## + G2         1     0.00  12.00
+## + freetime   1     0.00  12.00
+## + failures   1     0.00  12.00
+## + absences   1     0.00  12.00
+## + sex        1     0.00  12.00
+## - alc_use    1   444.41 452.41</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=8
+## high_use ~ studytime + alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - studytime  1     0.00   6.00
+## - romantic   1     0.00   6.00
+## &lt;none&gt;             0.00   8.00
+## + freetime   1     0.00  10.00
+## + health     1     0.00  10.00
+## + G2         1     0.00  10.00
+## + G3         1     0.00  10.00
+## + G1         1     0.00  10.00
+## + sex        1     0.00  10.00
+## + absences   1     0.00  10.00
+## + failures   1     0.00  10.00
+## - alc_use    1   448.02 454.02</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=6
+## high_use ~ alc_use + romantic</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## - romantic   1     0.00   4.00
+## &lt;none&gt;             0.00   6.00
+## + freetime   1     0.00   8.00
+## + studytime  1     0.00   8.00
+## + health     1     0.00   8.00
+## + G2         1     0.00   8.00
+## + G3         1     0.00   8.00
+## + G1         1     0.00   8.00
+## + absences   1     0.00   8.00
+## + failures   1     0.00   8.00
+## + sex        1     0.00   8.00
+## - alc_use    1   465.11 469.11</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## 
+## Step:  AIC=4
+## high_use ~ alc_use</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge
+
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>## Warning: glm.fit: algorithm did not converge</code></pre>
+<pre><code>## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</code></pre>
+<pre><code>##             Df Deviance    AIC
+## &lt;none&gt;             0.00   4.00
+## + romantic   1     0.00   6.00
+## + studytime  1     0.00   6.00
+## + freetime   1     0.00   6.00
+## + health     1     0.00   6.00
+## + G2         1     0.00   6.00
+## + G3         1     0.00   6.00
+## + G1         1     0.00   6.00
+## + absences   1     0.00   6.00
+## + failures   1     0.00   6.00
+## + sex        1     0.00   6.00
+## - alc_use    1   465.68 467.68</code></pre>
+<pre class="r"><code>summary(my_model_2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = high_use ~ alc_use, family = binomial(link = &quot;logit&quot;), 
+##     data = alc)
+## 
+## Deviance Residuals: 
+##        Min          1Q      Median          3Q         Max  
+## -1.342e-05  -2.110e-08  -2.110e-08   2.110e-08   1.402e-05  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)  -207.82   55600.36  -0.004    0.997
+## alc_use        92.35   24842.79   0.004    0.997
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 4.6568e+02  on 381  degrees of freedom
+## Residual deviance: 1.9279e-08  on 380  degrees of freedom
+## AIC: 4
+## 
+## Number of Fisher Scoring iterations: 25</code></pre>
+<pre class="r"><code>#prediction 
+predicted &lt;- predict(my_model_1, alc, type=&quot;response&quot;)
+head(predicted,2)</code></pre>
+<pre><code>##            1            2 
+## 2.220446e-16 2.220446e-16</code></pre>
+<pre class="r"><code>#output model
+library(ggplot2)
+g &lt;- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g + geom_point()</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
 <ul>
 <li><p>Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.</p></li>
 <li><p>Assume the reader has no previous knowledge of your data or the more advanced methods you are using. &gt;&gt;&gt;&gt;&gt;&gt;&gt; 815a3a5e2b7fb9d8340ad07b4fc667fa4c4d3f30</p></li>

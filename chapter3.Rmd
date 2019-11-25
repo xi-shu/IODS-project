@@ -106,6 +106,41 @@ table(high_use = alc$high_use, prediction = alc$prediction) %>% prop.table %>% a
 
 
 ```
+```{r}
+
+#7. cross-validation 
+# define a loss function (average prediction error)
+loss_func <- function(class, prob) {
+  n_wrong <- abs(class - prob) > 0.5
+  mean(n_wrong)
+}
+
+# compute the average number of wrong predictions in the (training) data
+loss_func(class = alc$high_use, prob = alc$probability)
+library(boot)
+cv <- cv.glm(data = alc, cost = loss_func, glmfit = my_model, K = 10)
+
+
+```
+```{r}
+#8.cross-validation to compare the performance of different logistic regression models
+my_model_1<-glm(formula =high_use ~ health+studytime+freetime+failures+sex+absences+G1+G2+G3+alc_use+romantic,
+                family = binomial(link="logit"),
+                data = alc)
+my_model_2 <- step(my_model_1,direction = "both")
+
+summary(my_model_2)
+
+#prediction 
+predicted <- predict(my_model_1, alc, type="response")
+head(predicted,2)
+
+#output model
+library(ggplot2)
+g <- ggplot(alc, aes(x = probability, y = high_use, col = prediction))
+g + geom_point()
+
+```
 
 - Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
 

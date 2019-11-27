@@ -6,7 +6,7 @@
 
 #load dataset
 ```{r}
-#4.1 analysis excersise
+
 #1.create a R markdown file 
 #2.load dataset
 library(MASS)
@@ -71,5 +71,3 @@ km <-kmeans(Boston, centers = 3)
 #viewlization
 pairs(Boston, col = km$cluster)
 ```
-
-

@@ -1,0 +1,73 @@
+# Insert chapter 5 Dimensionality reduction techniques
+
+*Describe the work you have done this week and summarize your learning.*
+```{r}
+
+
+library(ggplot2)
+library(dplyr)
+library(GGally)
+library(corrplot)
+library(MASS)
+library(tidyverse)
+library(readxl)
+library(ggthemes)
+library(tidyr)
+install.packages("FactoMineR")
+library(FactoMineR)
+human <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human2.txt", sep  =",", header = T)
+summary(human)
+#1.Show a graphical overview of the data
+ggpairs(human)
+cor(human) %>% corrplot
+#Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them. 
+#according to correlation calculation results, the varavile Mat.Mor, has a high relationship with Edu.Exp and  Life.EXP,Ado.Birth also has a high relationship with Edu.Exp and  Life.EXP.
+#2. principal component analysis (PCA)
+pca_human <- prcomp(human)
+summary(pca_human)
+# Draw a biplot displaying the observations by the first two principal components (PC1 coordinate in x-axis, PC2 coordinate in y-axis), along with arrows representing the original variables.
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col = c("grey", "blue"))
+#3.Standardize the variables in the human data
+human_std <- scale(human)
+pca_human_2 <- prcomp(human_std)
+biplot(pca_human_2, choices = 1:2, cex = c(0.8, 1), col = c("grey", "black"))
+#Interpret the results of both analysis 
+summary(pca_human)
+summary(pca_human_2)
+# the analysis results are different in standardized human data(pca_human_2) and unstandardized human data(pca_human_2). 
+
+#4.the calculation showed In standardized human data(pca_human_2), pc1 and pc2 consists of 69.84% information of human dataset in total. the correlationship in bioplot of standardized human data(pca_human_2) can be seen. Edu.Exp, GNI and life.Exp have a high correlation. parli.F and Labo.FM have a hign correlation, Mat.mor and ADO.Birth have a high correlation.  Mat.Mor,Ado.Birth,edu.Exp,GNI and Life.Exp make the significant contribution to the PC1. parli.F and Labo.Fm make the huge contribution to the PC2.
+
+#5. analysis tea
+#Load the tea dataset from the package Factominer. Explore the data briefly: look at the structure and the dimensions of the data and visualize it. Then do Multiple Correspondence Analysis on the tea data (or to a certain columns of the data, it’s up to you). Interpret the results of the MCA and draw at least the variable biplot of the analysis. You can also explore other plotting options for MCA. Comment on the output of the plots.
+
+data(tea)
+write.csv(tea,file="tea.csv")
+str(tea)
+dim(tea)
+summary(tea)
+#modify tea columns
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+library(MASS)
+tea_2 <- dplyr::select(tea, one_of(keep_columns))
+summary(tea_2)
+str(tea_2)
+dim(tea_2)
+# visualize the dataset
+gather(tea_2) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+
+# mca analysis
+mca <- MCA(tea_2, graph = FALSE)
+plot(mca, invisible=c("ind"), habillage = "quali")
+summary(mca)
+
+
+```
+
+
+
+
+
+- Describe your work and results clearly. 
+- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
+- Assume the reader has no previous knowledge of your data or the more advanced methods you are using.

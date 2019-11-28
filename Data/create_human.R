@@ -26,4 +26,27 @@ gii<-mutate(gii, ratio_lfpofF_M = (laF + laM) / 2)
 #join two dataset
 human<- inner_join(hd, gii, by = "Country", suffix = c(".hd", ".gii"))
 write.csv(human,file="human.csv")
+human <- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human1.txt", sep  =",", header = T)
+names(human)
+str(human)
+dim(human)
+summary(human)
+#mutatuion data 
+library(stringr)
+str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric
+#keep content 
+keep <- c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
+human <- select(human, one_of(keep))
+#Remove all rows with missing values and regions 
+human$Country
+complete.cases(human)
+data.frame(human[-1], comp = complete.cases(human))
+human_ <- filter(human, complete.cases(human))
 
+#row names of the data is the countres' names
+tail(human_, 10)
+last <- nrow(human_) - 7
+human_ <- human_[1:last, ]
+rownames(human_) <- human_$Country
+human <- select(human_, -Country)
+write.csv(human,file="human.csv")

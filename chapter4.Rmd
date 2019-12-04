@@ -6,7 +6,6 @@
 
 #load dataset
 ```{r}
-
 #1.create a R markdown file 
 #2.load dataset
 library(MASS)
@@ -40,7 +39,6 @@ test <- boston_scaled[-ind,]
 correct_classes <- test$crime
 #5.
 #linear discriminant analysis 
-library(MASS)
 lda.fit <- lda(crim ~ ., data = train)
 lda.fit 
 lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "orange", tex = 0.75, choices = c(1,2)){

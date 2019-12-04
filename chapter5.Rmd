@@ -1,9 +1,12 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # Insert chapter 5 Dimensionality reduction techniques
 
 *Describe the work you have done this week and summarize your learning.*
 ```{r}
-install.packages("tidyverse")
-install.packages("FactoMineR")
 library(ggplot2)
 library(dplyr)
 library(GGally)

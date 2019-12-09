@@ -1,0 +1,123 @@
+# Insert chapter 6 title here
+
+*Describe the work you have done this week and summarize your learning.*
+
+- Describe your work and results clearly. 
+- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods.
+- Assume the reader has no previous knowledge of your data or the more advanced methods you are using.
+```{r}
+# Data wrangling 
+#1 inout data, check their variable names, view the data contents and structures, and create some brief summaries of the variables
+BPRS <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/BPRS.txt", sep  =" ", header = T)
+RATS <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/rats.txt", header = TRUE, sep = '\t')
+str(BPRS)
+summary(BPRS)
+str(RATS)
+summary(RATS)
+#2 Convert the categorical variables of both data sets to factors
+library(dplyr)
+library(tidyr)
+# Factor variables ID and Group
+RATS$ID <- factor(RATS$ID)
+RATS$Group <- factor(RATS$Group)
+BPRS$treatment <- factor(BPRS$treatment)
+BPRS$subject <- factor(BPRS$subject)
+#Convert the data sets to long form. Add a week variable to BPRS and a Time variable to RATS.
+BPRSL <-  BPRS %>% 
+  gather(key = weeks, value = bprs, -treatment, -subject)%>% 
+  mutate(week = as.integer(substr(weeks,5,5)))
+RATSL <- RATS %>%
+  gather(key = WD, value = Weight, -ID, -Group) %>%
+  mutate(Time = as.integer(substr(WD,3,4))) 
+#glimpse two new dataset
+glimpse(BPRSL)
+glimpse(RATSL)
+
+```
+
+```{r}
+#2. analysis
+# Implement the analyses of Chapter 8 of MABS using the RATS data. 
+# 2.1 Plot the RATSL data
+library(ggplot2)
+ggplot(RATSL, aes(x = Time, y = Weight, linetype = ID)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ Group, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(RATSL$Weight), max(RATSL$Weight)))
+# Standardise the variable bprs
+RATSL_1 <- RATSL %>%
+  group_by(Time) %>%
+  mutate(stdweight = (Weight - mean(Weight))/sd(Weight) ) %>%
+  ungroup()
+# Glimpse the data
+glimpse(RATSL_1)
+# Plot again with the standardised bprs
+ggplot(RATSL_1, aes(x =Time, y =stdweight, linetype =ID  )) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ Group, labeller = label_both) +
+  scale_y_continuous(name = "standardized weight")
+# Number of time, baseline  included
+n <- RATSL_1$Time %>% unique() %>% length()
+# Summary data with mean and standard error of bprs by treatment and week 
+RATSL_1s<- RATSL_1 %>%
+  group_by(Group, Time) %>%
+  summarise( mean = mean(Weight), se = sd(Weight)/sqrt(n) ) %>%
+  ungroup()
+# Glimpse the data
+glimpse(RATSL_1s)
+# Plot the mean profiles
+ggplot(RATSL_1s, aes(x = Time, y = mean, linetype = Group, shape = Group)) +
+  geom_line() +
+  scale_linetype_manual(values = c(1,2,3)) +
+  geom_point(size=3) +
+  scale_shape_manual(values = c(1,2,3)) +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se, linetype="1"), width=0.3) +
+  theme(legend.position = c(0.8,0.8)) +
+  scale_y_continuous(name = "mean(weight) +/- se(weight)")
+# Draw a boxplot of the mean versus treatment
+ggplot(RATSL_1s, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(weight), Times")
+#comments: In these three gruops of rats, the the mean of weights of gruop1 is much lower than gruop2 and gruop3 counterpart.
+#2.2 Implement the analyses of Chapter 9 of MABS using the BPRS data. 
+# Plot the BPRSL data
+dim(BPRSL)
+ggplot(BPRSL, aes(x = week, y =bprs, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+BPRSL_reg <- lm(bprs ~ week + treatment, data = BPRSL)
+summary(BPRSL_reg)
+# access library lme4
+library(lme4)
+# Create a random intercept model
+BPRSL_ref <- lmer(bprs ~ week + treatment + (1 | subject), data = BPRSL, REML = FALSE)
+summary(BPRSL_ref)
+# create a random intercept and random slope model
+BPRSL_ref1 <- lmer(bprs ~ week + treatment + (week | subject), data = BPRSL, REML = FALSE)
+summary(BPRSL_ref1)
+anova(BPRSL_ref1, BPRSL_ref)
+# create a random intercept and random slope model
+BPRSL_ref2 <- lmer(bprs ~ week * treatment + (week | subject), data = BPRSL, REML = FALSE)
+summary(BPRSL_ref2)
+anova(BPRSL_ref1, BPRSL_ref2)
+# Create a vector of the fitted values
+Fitted <- fitted(BPRSL_ref2)
+BPRSL2 <- BPRSL %>%
+  mutate(Fitted)
+ggplot(BPRSL2, aes(x = week, y =Fitted, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+
+
+```
+
